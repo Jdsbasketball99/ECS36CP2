@@ -1,3 +1,7 @@
+//*****************************
+// Jacob Saunders
+//*****************************
+
 #include <iostream>
 #include "json.hpp"
 
@@ -14,34 +18,39 @@ void PriorityQueue::insert(Key k) {
 }
 
 void PriorityQueue::insert(KeyValuePair kv) {
-	// TODO: complete this function
+    //checks if queue is full
     if (size_ != max_size_)
     {
+    //increases size
     size_++;
+    //adds new node
     nodes_[size_] = kv;
+    //calls heapify up function
     heapifyUp(size_);
     }
 }
 
 KeyValuePair PriorityQueue::min() {
-	// TODO: complete this function
+	//Returns the root node
     return nodes_[1];
 }
 
 KeyValuePair PriorityQueue::removeMin() {
-	// TODO: complete this function
+	//Saves root node in Min
     KeyValuePair Min = min();
+    //calls remove on root
     removeNode(1);
+    //returns the Min node
     return Min;
 }
 
 bool PriorityQueue::isEmpty() const {
-	// TODO: complete this function
-    return (size_ == 1);
+	// Returns true if size is zero
+    return (size_ == 0);
 }
 
 size_t PriorityQueue::size() const {
-	// TODO: complete this function
+	// Returns the size
     return size_;
 }
 
@@ -69,54 +78,68 @@ nlohmann::json PriorityQueue::JSON() const {
 }
 
 void PriorityQueue::heapifyUp(size_t i) {
-	// TODO: complete this function
+	// Creates temp
     KeyValuePair temp;
+    //exits function if target is root
     if (i == 1)
     {
         return;
     }
+    //compares node to parent
     if(getKey(i) < getKey(i/2))
     {
+        //swaps if parents is greater then child node
         temp = nodes_[i/2];
         nodes_[i/2] = nodes_[i];
         nodes_[i] = temp;
+        //calls heapify up on parent node
         heapifyUp(i/2);
     }
     return;
 }
 
 void PriorityQueue::heapifyDown(size_t i) {
-	// TODO: complete this function
+	// creates temp
     KeyValuePair temp;
-
+    //checks if there are 2 children
     if(2*i <= size_-1)
     {
+        //finds smaller child
         if (getKey(2*i) < getKey((2*i)+1))
         {
+            //compares child to parent
             if(getKey(i) > getKey(2*i))
             {
+                //swaps child and parent
                 temp = nodes_[i];
                 nodes_[i] = nodes_[2*i];
                 nodes_[2*i] = temp;
+                //calls heapify down on child
                 heapifyDown(2*i);
             }
         }else 
         {
+            //compares child to parent
             if(getKey(i) > getKey((2*i)+1))
             {
+                //swaps child and parent
                 temp = nodes_[i];
                 nodes_[i] = nodes_[(2*i)+1];
                 nodes_[(2*i)+1] = temp;
+                //calls heapify down on child
                 heapifyDown((2*i)+1);
             }
         }
-    }else if(2*i == size_)
+    }else if(2*i == size_) // checks if there is one child
     {
+        //compares child to parent
         if(getKey(i) > getKey(2*i))
         {
+            //swaps child and parent
             temp = nodes_[i];
             nodes_[i] = nodes_[2*i];
             nodes_[2*i] = temp;
+            //calls heapify down on child
             heapifyDown(2*i);
         }
     }
@@ -126,13 +149,15 @@ void PriorityQueue::heapifyDown(size_t i) {
 }
 
 void PriorityQueue::removeNode(size_t i) {
-	// TODO: complete this function
+	// sets target node to last node
     nodes_[i] = nodes_[size_];
+    //decreases size
     size_--;
+    //calls heapifty down on target node
     heapifyDown(i);
 }
 
 Key PriorityQueue::getKey(size_t i) {
-	// TODO: complete this function
+	// returns the key of the target node
     return nodes_[i].first;
 }
